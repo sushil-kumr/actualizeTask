@@ -2,6 +2,7 @@
 import './App.css';
 import React, {useState,useEffect} from 'react'
 
+// this JSON for all option data with calculation value, calculation value used for common the calculation at end
 const dropDownData = [
   {
     id:1,
@@ -19,12 +20,13 @@ const dropDownData = [
 ]
 
 function App() {
-  const [text,setText] = useState("")
-  const [result,setResult] = useState("")
-  const [dropdown,setDropdown] = useState(1)
-  const [resultDropdown,setResultDropdown] = useState(2)
-  const [isError,setIsError] = useState(false)
+  const [text,setText] = useState("") // Input Text
+  const [result,setResult] = useState("") // Result Text
+  const [dropdown,setDropdown] = useState(1) // first dropdown/select
+  const [resultDropdown,setResultDropdown] = useState(2) // result dropdown/select
+  const [isError,setIsError] = useState(false) // for Error if user enter non numbers
 
+  // this method to validate the error and setting the text value
   const onTextChange = (e) =>{
     setIsError(false);
     if(isNaN(e.target.value))
@@ -34,21 +36,28 @@ function App() {
     }
   }
 
+  // this for update lifecycle for text,dropdown,resultDropdown
   useEffect(()=>{
     calculationProblem();
   },[text,dropdown,resultDropdown])
 
+  // This for calculation based on all the values
   const calculationProblem = () =>{
     if(!text){
       return;
     }
-    const firstDropdownItem = [...dropDownData].find(item=>dropdown===item.id)
+    const firstDropdownItem = [...dropDownData].find(item=>dropdown===item.id) // id for order based and find out the calculation value
     const resultDropdownItem = [...dropDownData].find(item=>resultDropdown===item.id)
+    // First condition for check the order
     if(firstDropdownItem.id < resultDropdownItem.id){
       setResult((parseFloat(text) * firstDropdownItem.calculation) * resultDropdownItem.calculation)
-    }else if(firstDropdownItem.id > resultDropdownItem.id){
+    }
+    // Second condition for check the order
+    else if(firstDropdownItem.id > resultDropdownItem.id){
       setResult((parseFloat(text) * resultDropdownItem.calculation) / firstDropdownItem.calculation)
-    }else{
+    }
+    // last condition 
+    else{
       setResult(text)
     }
   }
